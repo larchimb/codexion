@@ -13,6 +13,10 @@
 #ifndef CODEXION_H
 # define CODEXION_H
 
+#include <string.h>
+#include <stdlib.h>
+#include <limits.h>
+
 typedef struct s_args
 {
     int 	nb_coders;
@@ -22,6 +26,11 @@ typedef struct s_args
     long	time_to_refractor;
     int 	compiles_required;
     long	dongle_cooldown;
-    int 	scheduler;
-}
+    int 	scheduler; //0 = FIFO, 1 = EDF
+}   t_args;
+
+int	check_scheduler(const char *str);
+int check_values(t_args *args);
+int	parser(int ac, char **av, t_args *args);
+
 #endif

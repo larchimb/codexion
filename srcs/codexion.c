@@ -14,10 +14,16 @@
 
 int main(int ac, char **av)
 {
-    t_args  args;
+    t_args  *args;
 
-    args = malloc(sizeof(t_args))
-    if !args
+    args = malloc(sizeof(t_args));
+    if (!args)
         return (1);
-    parser(ac, av, &args)
+    if (parser(ac, av, args) == -1)
+	{
+		free(args);
+		return (1);
+	}
+	free(args)
+	return (0);
 }
