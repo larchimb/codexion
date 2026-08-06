@@ -1,0 +1,10 @@
+i = 0;
+while (i < args->nb_coders)
+{
+    coders[i].id = i + 1;
+    coders[i].compiles_done = 0;
+    coders[i].state = REFACTORING;
+    coders[i].left = &dongles[i];
+    coders[i].right = &dongles[(i + 1) % args->nb_coders];
+    i++;
+}

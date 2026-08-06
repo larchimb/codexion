@@ -16,6 +16,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <pthread.h>
 
 typedef struct s_args
 {
@@ -28,6 +29,24 @@ typedef struct s_args
     long	dongle_cooldown;
     int 	scheduler; //0 = FIFO, 1 = EDF
 }   t_args;
+
+typedef struct s_dongle
+{
+    int state; //0 available, 1 locked
+    long last_release;
+    pthread_mutex_t mutex;
+}   t_dongle;
+
+typedef struct s_coder
+{
+    pthread_t   coder;
+    int         id;
+    int         compiles_done;
+    char        *state;
+    long        last_start;
+    t_dongle    *left;
+    t_dongle    *right;
+}   t_coder;
 
 int	check_scheduler(const char *str);
 int check_values(t_args *args);
