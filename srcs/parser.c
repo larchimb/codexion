@@ -26,7 +26,7 @@ static long long	ft_atoi(const char *ptr)
 	while (ptr[i] >= '0' && ptr[i] <= '9')
 	{
 		if (res > (LLONG_MAX - (ptr[i] - '0')) / 10)
-			return (-1)
+			return (-1);
 		res = res * 10 + ptr[i++] - '0';
 	}
 	return (res);
@@ -87,5 +87,4 @@ int	parser(int ac, char **av, t_args *args)
 	args->dongle_cooldown = check_long(av[7]);
 	args->scheduler = check_scheduler(av[8]);
 	return (check_values(args));
-
 }

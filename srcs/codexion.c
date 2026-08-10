@@ -12,53 +12,45 @@
 
 #include "codexion.h"
 
-int	intialize(t_args *args)
+void	free_all(t_data *data)
 {
-	int		i;
-	t_coder		*coders;
-	t_dongle	*dongles;
+	int	i;
 
-	coders = malloc(sizeof(t_coder) * args->nb_coders);
-	if (!coders)
-		return (-1)
-	dongles = malloc(sizeof(t_dongle) * args->nb_coders);
-	if (!dongles)
+	i = 0;
+	if (data->coders)
 	{
-		free(coders);
-		return (-1)
+		while (i < data->args->nb_coders)
+			pthread_mutex_destroy(&data->coders[i++].mutex);
+		free(data->coders);
 	}
 	i = 0;
-	
-	while (i < args->nb_coders)
+	if (data->dongles)
 	{
-	    dongles[i].state = 0;
-	    dongles[i].last_release = 0;
-	    pthread_mutex_init(&dongles[i].mutex, NULL);
-	    i++;
+		while (i < data->args->nb_coders)
+			pthread_mutex_destroy(&data->dongles[i++].mutex);
+		free(data->dongles);
 	}
-	i = 0;
-	while (i < args->nb_coders)
-	{
-		tmp->id = i + 1;
-		tmp->compiles_done = 0;
-		tmp->state = "waiting";
-		tmp->last_start = 0;
-		coders[0] =
-	}
+	if (data->args)
+		free(data->args);
+	free(data);
 }
 
 int main(int ac, char **av)
 {
-    t_args  *args;
+    t_data	*data;
 
-    args = malloc(sizeof(t_args));
-    if (!args)
-        return (1);
-    if (parser(ac, av, args) == -1)
+	data = malloc(sizeof(t_data));
+	if (!data)
+		return (1);
+	data->args = NULL;
+	data->coders = NULL;
+	data->dongles = NULL;
+	data->stop = 0;
+	if (initialize_data(ac, av, data) == -1)
 	{
-		free(args);
+		free_all(data);
 		return (1);
 	}
-	free(args)
+	free_all(data);
 	return (0);
 }
