@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/10 07:56:48 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/10 14:55:15 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/11 14:36:30 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ static t_coder *create_coders(t_args *args, t_dongle *dongles)
 		coders[i].id = i + 1;
 		coders[i].compiles_done = 0;
 		coders[i].burnout = 0;
-		coders[i].state = "Refactoring";
+		coders[i].is_finished = 0;
+		coders[i].state = REFACTORING;
 		coders[i].last_start = 0;
 		coders[i].left = &dongles[i];
 		coders[i].right = &dongles[(i + 1) % args->nb_coders];

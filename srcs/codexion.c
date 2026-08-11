@@ -31,7 +31,10 @@ void	free_all(t_data *data)
 		free(data->dongles);
 	}
 	if (data->args)
+	{
+		pthread_mutex_destroy(&data->stop_mutex);
 		free(data->args);
+	}
 	free(data);
 }
 
