@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/05 11:09:01 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/06 11:04:32 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/12 18:38:14 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	check_scheduler(const char *str)
 	return (-1);
 }
 
-int check_values(t_args *args)
+int	check_values(t_args *args)
 {
 	if (args->nb_coders <= 0)
 		return (-1);

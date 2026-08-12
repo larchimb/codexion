@@ -35,7 +35,7 @@ static long long	ft_atoi(const char *ptr)
 static int	check_int(const char *str)
 {
 	int			i;
-	long long nbr;
+	long long	nbr;
 
 	i = 0;
 	if (str[i] == '+')
@@ -57,7 +57,7 @@ static int	check_int(const char *str)
 static long	check_long(const char *str)
 {
 	int			i;
-	long long nbr;
+	long long	nbr;
 
 	i = 0;
 	if (str[i] == '+')

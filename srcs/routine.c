@@ -6,61 +6,88 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/10 17:52:11 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/11 15:40:33 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/12 18:41:30 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-int to_compile()
+void	to_compile(t_thread *thread)
 {
-	//compile puis envoie le signal de liberation des dongles
-}
-
-
-void dongles_availables(t_data *data, int i)
-{
-	t_dongle	actual_dongle;
-	t_dongle	next_dongle;
-
-	actual_dongle = data->dongles[i];
-	next_dongle = data->dongles[(i + 1) % data->args->nb_coders;
-
-	pthread_mutex_lock(actual_dongle.mutex);
-	pthread_mutex_lock(next_dongle.mutex);
-	while (actual_dongle.state == 1 && next_dongle.state == 1)
-		pthread_cond_wait(&cond, &mutex) /// a modifier
-	actual_dongle.state = 0;
-	next_dongle.state = 0;
-	pthread_mutex_unlock(actual_dongle.mutex);
-	pthread_mutex_unlock(next_dongle.mutex);
-}
-
-int	thread_finished(t_data *data, t_coder coder)
-{
-	if (coder.compiles_done == data->args->compiles_required)
-		coder.is_finished = 1;
-}
-
-void routine(void *dat, int i)
-{
+	t_coder	*coder;
 	t_data	*data;
-	int		i;
 
-	data = (t_data *)dat;
-	while (data->stop == 0)
+	coder = thread->data->coders[thread->i];
+	data = thread->data;
+	pthread_mutex_lock(data->d_mutex);
+	while (coder->left->state == 1 && coder->right->state == 1)
+		pthread_cond_wait(data->cond, data->d_mutex);
+	coder->left->state = 0;
+	coder->right->state = 0;
+	print_message(data, "is taken a dongle", coder->id);
+	print_message(data, "is taken a dongle", coder->id);
+	print_message(data, "is compiling", coder->id);
+	delay_to_sleep(data, data->args->time_to_compile);
+	pthread_mutex_unlock(data->d_mutex);
+	pthread_cond_broadcast(data->cond);
+}
+
+void	to_debug(t_thread *thread)
+{
+	t_coder	*coder;
+	t_data	*data;
+
+	coder = thread->data->coders[thread->i];
+	data = thread->data;
+	print_message(data, "is debugging", coder->id);
+	delay_to_sleep(data, data->args->time_to_debug);
+}
+
+void	to_refactor(t_thread *thread)
+{
+	t_coder	*coder;
+	t_data	*data;
+
+	coder = thread->data->coders[thread->i];
+	data = thread->data;
+	print_message(data, "is refactoring", coder->id);
+	delay_to_sleep(data, data->args->time_to_refractor);
+	coder->compiles_done += 1;
+}
+
+void	routine(void *args)
+{
+	t_thread	*thread;
+	int			compiles_done;
+	int			are_finished;
+
+	thread = (t_thread *)args;
+	compiles_done = thread->data->coders[thread->i]->compiles_done;
+	are_finished = thread->data->coders[thread->i]->is_finished;
+	while (thread->data->stop == 0 && are_finished == 0)
 	{
-
-			if (data->coders[i]->is_finished == 1)
-			{
-				i++;
-				continue;
-			}
-			dongles_availables(data, i);
-			to_compile(data->coders[i]);
-			to_debug(data->coders[i]);
-			to_refactoring(data->coders[i]);
-			thread_finished(data, coders[i]);
+		to_compile(thread);
+		to_debug(thread);
+		to_refactor(thread);
+		if (compiles_done == thread->data->args->compiles_required)
+		{
+			pthread_mutex_lock(coder->c_mutex);
+			coder->is_finished = 1;
+			pthread_mutex_unlock(coder->c_mutex);
 		}
 	}
+	free(thread);
+	return (NULL);
+}
+
+void	launch_routine(t_data *data, int index)
+{
+	t_thread	*thread;
+
+	thread = malloc(sizeof(t_thread));
+	if (!thread)
+		return (NULL);
+	thread->data = data;
+	thread->i = index;
+	pthread_create(data->coder[index]->coder, NULL, routine, thread);
 }

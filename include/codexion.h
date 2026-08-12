@@ -14,6 +14,7 @@
 # define CODEXION_H
 
 # include <unistd.h>
+# include <stdio.h>
 # include <string.h>
 # include <stdlib.h>
 # include <limits.h>
@@ -43,13 +44,12 @@ typedef struct s_dongle
 {
 	int				state; //1 available, 0 locked
 	long			last_release;
-	pthread_mutex_t	mutex;
 }	t_dongle;
 
 typedef struct s_coder
 {
 	pthread_t			coder;
-	pthread_mutex_t		mutex; //For locking burnout statement
+	pthread_mutex_t		c_mutex; //For locking burnout statement
 	int					id;
 	int					compiles_done;
 	int					burnout;
@@ -63,16 +63,29 @@ typedef struct s_coder
 typedef struct s_data
 {
 	pthread_mutex_t	stop_mutex;
+	pthread_mutex_t	d_mutex;
+	pthread_cond_t  cond;
+	pthread_create	monitor;
 	t_args			*args;
 	t_dongle		*dongles;
 	t_coder			*coders;
 	int				stop;
+	long			starting_time;
 }	t_data;
+
+typedef struct s_thread
+{
+	t_data	*data;
+	int		i;
+}	t_thread;
 
 int		check_scheduler(const char *str);
 int		check_values(t_args *args);
 int		parser(int ac, char **av, t_args *args);
-int		initialize_data(int ac, char **av, t_data *data);
+int		initialize_datas(int ac, char **av, t_data *data);
 long	get_time_ms(void);
-
+long	get_exec_time(*data);
+void	print_message(t_data *data, char *sentence, int id);
+void 	*time_checker(void *args);
+int		burnout_signal(t_data *data, int i);
 #endif
