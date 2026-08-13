@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/10 17:52:11 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/13 12:09:04 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/13 17:31:48 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,23 @@ static void	to_compile(t_thread *thread)
 	coder = &thread->data->coders[thread->i];
 	data = thread->data;
 	pthread_mutex_lock(&data->d_mutex);
-	while (coder->left->state == 1 && coder->right->state == 1)
+	while ((coder->left->state == 0 && coder->right->state == 0)
+		&& (get_time_ms() - coder->left->last_release < data->args->dongle_cooldown
+		|| get_time_ms() - coder->right->last_release < data->args->dongle_cooldown))
 		pthread_cond_wait(&data->cond, &data->d_mutex);
+	coder->last_start = get_time_ms();
 	coder->left->state = 0;
 	coder->right->state = 0;
-	coder->last_start = get_time_ms();
 	print_message(data, "is taken a dongle", coder->id);
 	print_message(data, "is taken a dongle", coder->id);
 	print_message(data, "is compiling", coder->id);
+	coder->left->last_release = get_time_ms();
+	coder->right->last_release = get_time_ms();
+	pthread_mutex_unlock(&data->d_mutex);
 	delay_to_sleep(data, data->args->time_to_compile);
+	pthread_mutex_lock(&data->d_mutex);
+	coder->left->state = 1;
+	coder->right->state = 1;
 	pthread_mutex_unlock(&data->d_mutex);
 }
 
@@ -65,7 +73,6 @@ static void	*routine(void *args)
 	while (thread->data->stop == 0 && coder->is_finished == 0)
 	{
 		to_compile(thread);
-		delay_cooldown(thread->data, thread->data->args->dongle_cooldown);
 		pthread_cond_broadcast(&thread->data->cond);
 		to_debug(thread);
 		to_refactor(thread);
