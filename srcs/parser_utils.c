@@ -6,17 +6,17 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/05 11:09:01 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/12 18:38:14 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/13 10:24:00 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/codexion.h"
+#include "codexion.h"
 
 int	check_scheduler(const char *str)
 {
-	if (strcmp(str, "fifo") == 0 || strcmp(str, "FIFO") == 0)
+	if (strcmp(str, "fifo") == 0)
 		return (0);
-	else if (strcmp(str, "edf") == 0 || strcmp(str, "EDF") == 0)
+	else if (strcmp(str, "edf") == 0)
 		return (1);
 	return (-1);
 }

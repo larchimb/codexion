@@ -65,7 +65,7 @@ typedef struct s_data
 	pthread_mutex_t	stop_mutex;
 	pthread_mutex_t	d_mutex;
 	pthread_cond_t  cond;
-	pthread_create	monitor;
+	pthread_t		monitor;
 	t_args			*args;
 	t_dongle		*dongles;
 	t_coder			*coders;
@@ -84,8 +84,10 @@ int		check_values(t_args *args);
 int		parser(int ac, char **av, t_args *args);
 int		initialize_datas(int ac, char **av, t_data *data);
 long	get_time_ms(void);
-long	get_exec_time(*data);
+long	get_exec_time(t_data *data);
 void	print_message(t_data *data, char *sentence, int id);
 void 	*time_checker(void *args);
-int		burnout_signal(t_data *data, int i);
+void	delay_to_sleep(t_data *data, long delay);
+void	launch_routine(t_data *data, int index);
+void	delay_cooldown(t_data *data, long delay);
 #endif

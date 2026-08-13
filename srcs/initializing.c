@@ -6,11 +6,11 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/10 07:56:48 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/12 18:37:46 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/13 09:58:01 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/codexion.h"
+#include "codexion.h"
 
 static t_dongle	*create_dongles(t_args *args)
 {
@@ -25,7 +25,6 @@ static t_dongle	*create_dongles(t_args *args)
 	{
 		dongles[i].state = 0;
 		dongles[i].last_release = 0;
-		pthread_mutex_init(&dongles[i].mutex, NULL);
 		i++;
 	}
 	return (dongles);
@@ -50,7 +49,7 @@ static t_coder	*create_coders(t_data *data, t_args *args, t_dongle *dongles)
 		coders[i].last_start = data->starting_time;
 		coders[i].left = &dongles[i];
 		coders[i].right = &dongles[(i + 1) % args->nb_coders];
-		pthread_mutex_init(&coders[i].mutex, NULL);
+		pthread_mutex_init(&coders[i].c_mutex, NULL);
 		i++;
 	}
 	return (coders);

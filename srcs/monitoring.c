@@ -6,13 +6,13 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/10 10:36:54 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/12 18:35:51 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/13 12:02:12 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-int	burnout_signal(t_data *data, int i)
+static int	burnout_signal(t_data *data, int i)
 {
 	long	burnout;
 	long	actual;
@@ -21,11 +21,11 @@ int	burnout_signal(t_data *data, int i)
 	actual = get_time_ms();
 	if (actual - data->coders[i].last_start >= burnout)
 	{
+		printf("%ld %d burned out\n", get_exec_time(data), data->coders[i].id);
 		pthread_mutex_lock(&data->stop_mutex);
 		data->coders[i].burnout = 1;
 		data->stop = 1;
 		pthread_mutex_unlock(&data->stop_mutex);
-		print_message(get_exec_time(data), "burned out", data->coders[i]->id);
 		return (-1);
 	}
 	return (0);

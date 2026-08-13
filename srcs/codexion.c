@@ -12,7 +12,7 @@
 
 #include "codexion.h"
 
-void	free_all(t_data *data)
+static void	free_all(t_data *data)
 {
 	int	i;
 
@@ -20,7 +20,7 @@ void	free_all(t_data *data)
 	if (data->coders)
 	{
 		while (i < data->args->nb_coders)
-			pthread_mutex_destroy(&data->coders[i++].mutex);
+			pthread_mutex_destroy(&data->coders[i++].c_mutex);
 		free(data->coders);
 	}
 	i = 0;
@@ -35,7 +35,7 @@ void	free_all(t_data *data)
 	free(data);
 }
 
-int	threads_joined(t_data *data)
+static int	threads_joined(t_data *data)
 {
 	int	i;
 	int	result;
@@ -44,8 +44,8 @@ int	threads_joined(t_data *data)
 	result = 0;
 	while (i < data->args->nb_coders)
 	{
-		pthread_join(data->coders[i]->coder);
-		if (data->coders[i++]->is_finished == 1)
+		pthread_join(data->coders[i].coder, NULL);
+		if (data->coders[i++].is_finished == 1)
 			result += 1;
 	}
 	return (result);
@@ -70,7 +70,7 @@ int	main(int ac, char **av)
 		free_all(data);
 		return (1);
 	}
-	pthread_create(data->monitor, NULL, time_checker, data);
+	pthread_create(&data->monitor, NULL, time_checker, data);
 	while (i < data->args->nb_coders)
 		launch_routine(data, i++);
 	if (threads_joined(data) == data->args->nb_coders)
