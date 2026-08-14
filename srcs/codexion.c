@@ -27,11 +27,10 @@ static void	free_all(t_data *data)
 	if (data->dongles)
 		free(data->dongles);
 	if (data->args)
-	{
-		pthread_mutex_destroy(&data->stop_mutex);
-		pthread_mutex_destroy(&data->d_mutex);
 		free(data->args);
-	}
+	pthread_mutex_destroy(&data->stop_mutex);
+	pthread_mutex_destroy(&data->d_mutex);
+	pthread_cond_destroy(&data->cond);
 	free(data);
 }
 
@@ -51,6 +50,18 @@ static int	threads_joined(t_data *data)
 	return (result);
 }
 
+void	initialize_data_struc(t_data *data)
+{
+	data->args = NULL;
+	data->coders = NULL;
+	data->dongles = NULL;
+	pthread_mutex_init(&data->stop_mutex, NULL);
+	pthread_mutex_init(&data->d_mutex, NULL);
+	pthread_cond_init(&data->cond, NULL);
+	data->stop = 0;
+	data->starting_time = get_time_ms();
+}
+
 int	main(int ac, char **av)
 {
 	t_data	*data;
@@ -60,11 +71,7 @@ int	main(int ac, char **av)
 	data = malloc(sizeof(t_data));
 	if (!data)
 		return (1);
-	data->args = NULL;
-	data->coders = NULL;
-	data->dongles = NULL;
-	data->stop = 0;
-	data->starting_time = get_time_ms();
+	initialize_data_struc(data);
 	if (initialize_datas(ac, av, data) == -1)
 	{
 		free_all(data);

@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/10 17:52:11 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/14 10:32:52 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/14 14:11:58 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ static void	to_compile(t_thread *thread)
 	pthread_cond_broadcast(&thread->data->cond);
 	pthread_mutex_lock(&data->d_mutex);
 	while (coder->left->state == 0 || coder->right->state == 0
-			|| check_cooldowns(thread) == 0)
+		|| check_cooldowns(thread) == 0)
 	{
-		printf("%d dans la boucle \n", thread->i + 1);
-		pthread_cond_wait(&data->cond, &data->d_mutex);
+		add_time_ms(&data->ts, data->args->time_to_compile);
+		pthread_cond_timedwait(&data->cond, &data->d_mutex, &data->ts);
 	}
 	coder->last_start = get_time_ms();
 	coder->left->state = 0;
@@ -33,19 +33,13 @@ static void	to_compile(t_thread *thread)
 	print_message(data, "is taken a dongle", coder->id);
 	print_message(data, "is taken a dongle", coder->id);
 	print_message(data, "is compiling", coder->id);
-	coder->left->last_release = get_time_ms();
-	coder->right->last_release = get_time_ms();
 	pthread_mutex_unlock(&data->d_mutex);
 	delay_to_sleep(data, data->args->time_to_compile);
-	pthread_mutex_lock(&data->d_mutex);
-	coder->left->state = 1;
-	coder->right->state = 1;
-	pthread_mutex_unlock(&data->d_mutex);
+	change_states(data, coder);
 }
 
 static void	to_debug(t_thread *thread)
 {
-
 	t_coder	*coder;
 	t_data	*data;
 
@@ -53,7 +47,6 @@ static void	to_debug(t_thread *thread)
 	data = thread->data;
 	print_message(data, "is debugging", coder->id);
 	delay_to_sleep(data, data->args->time_to_debug);
-	pthread_cond_broadcast(&thread->data->cond);
 }
 
 static void	to_refactor(t_thread *thread)
@@ -66,7 +59,6 @@ static void	to_refactor(t_thread *thread)
 	print_message(data, "is refactoring", coder->id);
 	delay_to_sleep(data, data->args->time_to_refractor);
 	coder->compiles_done += 1;
-	pthread_cond_broadcast(&thread->data->cond);
 }
 
 static void	*routine(void *args)

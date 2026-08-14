@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/12 16:27:14 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/14 10:18:25 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/14 14:11:34 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,3 +53,12 @@ int	check_cooldowns(t_thread *thread)
 	return (0);
 }
 
+void	change_states(t_data *data, t_coder *coder)
+{
+	pthread_mutex_lock(&data->d_mutex);
+	coder->left->state = 1;
+	coder->right->state = 1;
+	coder->left->last_release = get_time_ms();
+	coder->right->last_release = get_time_ms();
+	pthread_mutex_unlock(&data->d_mutex);
+}

@@ -21,13 +21,6 @@
 # include <pthread.h>
 # include <sys/time.h>
 
-enum	e_status
-{
-	COMPILING,
-	DEBUGGING,
-	REFACTORING,
-};
-
 typedef struct s_args
 {
 	int		nb_coders;
@@ -54,7 +47,6 @@ typedef struct s_coder
 	int					compiles_done;
 	int					burnout;
 	int					is_finished;
-	enum e_status		state;
 	long				last_start;
 	t_dongle			*left;
 	t_dongle			*right;
@@ -71,7 +63,7 @@ typedef struct s_data
 	t_coder			*coders;
 	int				stop;
 	long			starting_time;
-	struct timespec	*ts;
+	struct timespec	ts;
 }	t_data;
 
 typedef struct s_thread
@@ -91,5 +83,6 @@ void	print_message(t_data *data, char *sentence, int id);
 void 	*time_checker(void *args);
 void	delay_to_sleep(t_data *data, long delay);
 void	launch_routine(t_data *data, int index);
-void 	add_100ms(struct timespec *ts);
+void 	add_time_ms(struct timespec *ts, long time_to_add);
+void	change_states(t_data *data, t_coder *coder);
 #endif

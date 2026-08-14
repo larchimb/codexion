@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/12 09:22:10 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/14 11:06:14 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/14 14:09:23 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,13 @@ long	get_exec_time(t_data *data)
 	return (actual_time - data->starting_time);
 }
 
-void add_100ms(struct timespec *ts)
+void	add_time_ms(struct timespec *ts, long time_to_add)
 {
-    clock_gettime(CLOCK_REALTIME, ts);
-    ts->tv_nsec += 100000000L;
-    if (ts->tv_nsec >= 1000000000L)
-    {
-        ts->tv_sec += 1;
-        ts->tv_nsec -= 1000000000L;
-    }
+	clock_gettime(CLOCK_REALTIME, ts);
+	ts->tv_nsec += time_to_add;
+	if (ts->tv_nsec >= 1000000000L)
+	{
+		ts->tv_sec += 1;
+		ts->tv_nsec -= 1000000000L;
+	}
 }
