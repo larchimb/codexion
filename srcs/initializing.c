@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/10 07:56:48 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/13 14:10:42 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/14 10:20:45 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static t_dongle	*create_dongles(t_args *args)
 	while (i < args->nb_coders)
 	{
 		dongles[i].state = 1;
-		dongles[i].last_release = get_time_ms();
+		dongles[i].last_release = get_time_ms() - (args->dongle_cooldown + 1);
 		i++;
 	}
 	return (dongles);
