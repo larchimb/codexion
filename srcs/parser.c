@@ -15,27 +15,29 @@
 static long long	ft_atoi(const char *ptr)
 {
 	long long	res;
-	int			i;
+	int		i;
 
 	i = 0;
 	res = 0;
+
+	if (strlen(ptr) >)
+	{
+		printf("[ERROR]: %s is superior too big.", ptr);
+		return (-1);
+	}
 	while ((ptr[i] >= 9 && ptr[i] <= 13) || ptr[i] == ' ')
 		i++;
 	if (ptr[i] == '+')
 		i++;
 	while (ptr[i] >= '0' && ptr[i] <= '9')
-	{
-		if (res > (LLONG_MAX - (ptr[i] - '0')) / 10)
-			return (-1);
 		res = res * 10 + ptr[i++] - '0';
-	}
 	return (res);
 }
 
 static int	check_int(const char *str)
 {
 	int			i;
-	long long	nbr;
+	long	nbr;
 
 	i = 0;
 	if (str[i] == '+')
@@ -45,16 +47,22 @@ static int	check_int(const char *str)
 	while (str[i])
 	{
 		if (str[i] < '0' || str[i] > '9')
+		{
+			printf("[ERROR]: %s isn't a positive integer", str);
 			return (-1);
+		}
 		i++;
 	}
 	nbr = ft_atoi(str);
-	if (nbr > INT_MAX)
+	if (nbr > INT_MAX || nbr == -1)
+	{
+		fprintf(stderr, "[ERROR]: %s is superior to INT_MAX", str);
 		return (-1);
+	}
 	return (nbr);
 }
 
-static long	check_long(const char *str)
+static long	long check_long(const char *str)
 {
 	int			i;
 	long long	nbr;
@@ -67,17 +75,28 @@ static long	check_long(const char *str)
 	while (str[i])
 	{
 		if (str[i] < '0' || str[i] > '9')
+		{
+			printf("[ERROR]: %s isn't a positive integer", str);
 			return (-1);
+		}
 		i++;
 	}
 	nbr = ft_atoi(str);
-	return ((long)nbr);
+	if (nbr > LLONG_MAX || nbr == -1)
+	{
+		fprintf(stderr, "[ERROR]: %s is superior to INT_MAX", str);
+		return (-1);
+	}
+	return (nbr);
 }
 
 int	parser(int ac, char **av, t_args *args)
 {
 	if (ac != 9)
+	{
+		printf("[ERROR]: There is %d arguments, need 9.", ac);
 		return (-1);
+	}
 	args->nb_coders = check_int(av[1]);
 	args->time_to_burnout = check_long(av[2]);
 	args->time_to_compile = check_long(av[3]);

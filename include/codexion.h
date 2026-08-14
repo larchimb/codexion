@@ -23,20 +23,20 @@
 
 typedef struct s_args
 {
-	int		nb_coders;
-	long	time_to_burnout;
-	long	time_to_compile;
-	long	time_to_debug;
-	long	time_to_refractor;
-	int		compiles_required;
-	long	dongle_cooldown;
-	int		scheduler; //0 = FIFO, 1 = EDF
+	int			nb_coders;
+	long long	time_to_burnout;
+	long long	time_to_compile;
+	long long	time_to_debug;
+	long long	time_to_refractor;
+	int			compiles_required;
+	long long	dongle_cooldown;
+	int			scheduler; //0 = FIFO, 1 = EDF
 }	t_args;
 
 typedef struct s_dongle
 {
 	int				state; //1 available, 0 locked
-	long			last_release;
+	long long		last_release;
 }	t_dongle;
 
 typedef struct s_coder
@@ -47,7 +47,7 @@ typedef struct s_coder
 	int					compiles_done;
 	int					burnout;
 	int					is_finished;
-	long				last_start;
+	long long			last_start;
 	t_dongle			*left;
 	t_dongle			*right;
 }	t_coder;
@@ -62,7 +62,7 @@ typedef struct s_data
 	t_dongle		*dongles;
 	t_coder			*coders;
 	int				stop;
-	long			starting_time;
+	long long		starting_time;
 	struct timespec	ts;
 }	t_data;
 
@@ -72,17 +72,17 @@ typedef struct s_thread
 	int		i;
 }	t_thread;
 
-int		check_scheduler(const char *str);
-int		check_values(t_args *args);
-int		parser(int ac, char **av, t_args *args);
-int		initialize_datas(int ac, char **av, t_data *data);
-int		check_cooldowns(t_thread *thread);
-long	get_time_ms(void);
-long	get_exec_time(t_data *data);
-void	print_message(t_data *data, char *sentence, int id);
-void 	*time_checker(void *args);
-void	delay_to_sleep(t_data *data, long delay);
-void	launch_routine(t_data *data, int index);
-void 	add_time_ms(struct timespec *ts, long time_to_add);
-void	change_states(t_data *data, t_coder *coder);
+int			check_scheduler(const char *str);
+int			check_values(t_args *args);
+int			parser(int ac, char **av, t_args *args);
+int			initialize_datas(int ac, char **av, t_data *data);
+int			check_cooldowns(t_thread *thread);
+long long	get_time_ms(void);
+long long	get_exec_time(t_data *data);
+void		print_message(t_data *data, char *sentence, int id);
+void 		*time_checker(void *args);
+void		delay_to_sleep(t_data *data, long long delay);
+void		launch_routine(t_data *data, int index);
+void 		add_time_ms(struct timespec *ts, long long time_to_add);
+void		change_states(t_data *data, t_coder *coder);
 #endif

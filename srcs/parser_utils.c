@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/05 11:09:01 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/13 10:24:00 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/14 15:26:55 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int	check_scheduler(const char *str)
 		return (0);
 	else if (strcmp(str, "edf") == 0)
 		return (1);
+	printf("[ERROR]: %s isn't 'fifo' or 'edf'.", str);
 	return (-1);
 }
 
