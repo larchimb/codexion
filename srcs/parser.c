@@ -15,16 +15,12 @@
 static long long	ft_atoi(const char *ptr)
 {
 	long long	res;
-	int		i;
+	int			i;
 
 	i = 0;
 	res = 0;
-
-	if (strlen(ptr) >)
-	{
-		printf("[ERROR]: %s is superior too big.", ptr);
+	if (strlen(ptr) > 17)
 		return (-1);
-	}
 	while ((ptr[i] >= 9 && ptr[i] <= 13) || ptr[i] == ' ')
 		i++;
 	if (ptr[i] == '+')
@@ -37,7 +33,7 @@ static long long	ft_atoi(const char *ptr)
 static int	check_int(const char *str)
 {
 	int			i;
-	long	nbr;
+	long long	nbr;
 
 	i = 0;
 	if (str[i] == '+')
@@ -62,7 +58,7 @@ static int	check_int(const char *str)
 	return (nbr);
 }
 
-static long	long check_long(const char *str)
+static long	long	check_long(const char *str)
 {
 	int			i;
 	long long	nbr;
@@ -84,7 +80,7 @@ static long	long check_long(const char *str)
 	nbr = ft_atoi(str);
 	if (nbr > LLONG_MAX || nbr == -1)
 	{
-		fprintf(stderr, "[ERROR]: %s is superior to INT_MAX", str);
+		fprintf(stderr, "[ERROR]: %s is superior to LLONG_MAX", str);
 		return (-1);
 	}
 	return (nbr);

@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/05 11:09:01 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/14 15:26:55 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/15 11:22:46 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,11 @@ int	check_scheduler(const char *str)
 
 int	check_values(t_args *args)
 {
-	if (args->nb_coders <= 0)
+	if (args->nb_coders <= 1)
+	{
+		fprintf(stderr, "[ERROR]: You need at least 2 coders for simulate\n");
 		return (-1);
+	}
 	if (args->time_to_burnout < 0)
 		return (-1);
 	if (args->time_to_compile < 0)

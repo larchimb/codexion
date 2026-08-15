@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/10 17:52:11 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/14 14:11:58 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/15 14:50:29 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ static void	to_compile(t_thread *thread)
 
 	coder = &thread->data->coders[thread->i];
 	data = thread->data;
-	pthread_cond_broadcast(&thread->data->cond);
 	pthread_mutex_lock(&data->d_mutex);
 	while (coder->left->state == 0 || coder->right->state == 0
 		|| check_cooldowns(thread) == 0)
@@ -85,14 +84,31 @@ static void	*routine(void *args)
 	return (NULL);
 }
 
-void	launch_routine(t_data *data, int index)
+int	create_thread(t_data *data, int index)
 {
 	t_thread	*thread;
 
 	thread = malloc(sizeof(t_thread));
 	if (!thread)
-		return ;
+	{
+		pthread_mutex_lock(&data->stop_mutex);
+		data->stop = 1;
+		pthread_mutex_unlock(&data->stop_mutex);
+		fprintf(stderr, "[ERROR]: Memory allocation for thread struc"
+			" from %d failed\n", index + 1);
+		return (-1);
+	}
 	thread->data = data;
 	thread->i = index;
-	pthread_create(&data->coders[index].coder, NULL, routine, thread);
+	if (pthread_create(&data->coders[index].coder, NULL, routine, thread))
+	{
+		pthread_mutex_lock(&data->stop_mutex);
+		data->stop = 1;
+		pthread_mutex_unlock(&data->stop_mutex);
+		fprintf(stderr, "[ERROR]: Thread %d failed\n", index + 1);
+		free(thread);
+		return (-1);
+	}
+	data->thread_created += 1;
+	return (0);
 }

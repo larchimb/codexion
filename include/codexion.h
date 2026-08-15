@@ -64,6 +64,7 @@ typedef struct s_data
 	int				stop;
 	long long		starting_time;
 	struct timespec	ts;
+	int				thread_created;
 }	t_data;
 
 typedef struct s_thread
@@ -75,14 +76,15 @@ typedef struct s_thread
 int			check_scheduler(const char *str);
 int			check_values(t_args *args);
 int			parser(int ac, char **av, t_args *args);
+int			initialize_data_struc(t_data *data);
 int			initialize_datas(int ac, char **av, t_data *data);
 int			check_cooldowns(t_thread *thread);
+int			create_thread(t_data *data, int index);
 long long	get_time_ms(void);
 long long	get_exec_time(t_data *data);
 void		print_message(t_data *data, char *sentence, int id);
 void 		*time_checker(void *args);
 void		delay_to_sleep(t_data *data, long long delay);
-void		launch_routine(t_data *data, int index);
 void 		add_time_ms(struct timespec *ts, long long time_to_add);
 void		change_states(t_data *data, t_coder *coder);
 #endif

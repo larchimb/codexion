@@ -34,6 +34,16 @@ static void	free_all(t_data *data)
 	free(data);
 }
 
+static int	check_free(t_data *data, int error)
+{
+	if (error != 0)
+	{
+		free_all(data);
+		return (-1);
+	}
+	return (0);
+}
+
 static int	threads_joined(t_data *data)
 {
 	int	i;
@@ -41,25 +51,16 @@ static int	threads_joined(t_data *data)
 
 	i = 0;
 	result = 0;
-	while (i < data->args->nb_coders)
+	while (i < data->thread_created)
 	{
 		pthread_join(data->coders[i].coder, NULL);
 		if (data->coders[i++].is_finished == 1)
 			result += 1;
 	}
+	pthread_mutex_lock(&data->stop_mutex);
+	data->stop = 1;
+	pthread_mutex_unlock(&data->stop_mutex);
 	return (result);
-}
-
-void	initialize_data_struc(t_data *data)
-{
-	data->args = NULL;
-	data->coders = NULL;
-	data->dongles = NULL;
-	pthread_mutex_init(&data->stop_mutex, NULL);
-	pthread_mutex_init(&data->d_mutex, NULL);
-	pthread_cond_init(&data->cond, NULL);
-	data->stop = 0;
-	data->starting_time = get_time_ms();
 }
 
 int	main(int ac, char **av)
@@ -71,17 +72,18 @@ int	main(int ac, char **av)
 	data = malloc(sizeof(t_data));
 	if (!data)
 		return (1);
-	initialize_data_struc(data);
-	if (initialize_datas(ac, av, data) == -1)
-	{
-		free_all(data);
+	if (check_free(data, initialize_data_struc(data)) == -1)
 		return (1);
-	}
-	pthread_create(&data->monitor, NULL, time_checker, data);
+	if (check_free(data, initialize_datas(ac, av, data)) == -1)
+		return (1);
+	if (check_free(data,
+			pthread_create(&data->monitor, NULL, time_checker, data)) == -1)
+		return (1);
 	while (i < data->args->nb_coders)
-		launch_routine(data, i++);
+		if (create_thread(data, i++) == -1)
+			break ;
 	if (threads_joined(data) == data->args->nb_coders)
-		data->stop = 1;
+		fprintf(stdout, "[INFO]: Simulation finished\n");
 	pthread_join(data->monitor, NULL);
 	free_all(data);
 	return (0);

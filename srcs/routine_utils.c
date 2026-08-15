@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/12 16:27:14 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/14 14:11:34 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/15 11:26:19 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@ void	print_message(t_data *data, char *sentence, int id)
 		pthread_mutex_unlock(&data->stop_mutex);
 		return ;
 	}
+	printf("%lld %d %s\n", get_exec_time(data), id, sentence);
 	pthread_mutex_unlock(&data->stop_mutex);
-	printf("%ld %d %s\n", get_exec_time(data), id, sentence);
 }
 
-void	delay_to_sleep(t_data *data, long delay)
+void	delay_to_sleep(t_data *data, long long delay)
 {
 	pthread_mutex_lock(&data->stop_mutex);
 	if (data->stop == 1)
