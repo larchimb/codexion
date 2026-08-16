@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/10 10:36:54 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/15 11:13:39 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/16 14:34:25 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,19 @@ static int	burnout_signal(t_data *data, int i)
 {
 	long	burnout;
 	long	actual;
+	t_coder	*coder;
 
 	burnout = data->args->time_to_burnout;
 	actual = get_time_ms();
-	if (actual - data->coders[i].last_start >= burnout)
+	coder = &data->coders[i];
+	if (coder->is_finished == 0 && actual - coder->last_start >= burnout)
 	{
-		printf("%lld %d burned out\n", get_exec_time(data), data->coders[i].id);
+		printf("%lld %d burned out\n", get_exec_time(data), coder->id);
 		pthread_mutex_lock(&data->stop_mutex);
-		data->coders[i].burnout = 1;
+		coder->burnout = 1;
 		data->stop = 1;
 		pthread_mutex_unlock(&data->stop_mutex);
+		pthread_cond_broadcast(&data->cond);
 		return (-1);
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/12 16:27:14 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/15 11:26:19 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/16 15:45:16 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,26 @@ void	print_message(t_data *data, char *sentence, int id)
 
 void	delay_to_sleep(t_data *data, long long delay)
 {
-	pthread_mutex_lock(&data->stop_mutex);
-	if (data->stop == 1)
+	long long	slept;
+	long long	chunk;
+
+	slept = 0;
+	chunk = 100;
+	while (slept < delay)
 	{
+		pthread_mutex_lock(&data->stop_mutex);
+		if (data->stop == 1)
+		{
+			pthread_mutex_unlock(&data->stop_mutex);
+			return ;
+		}
 		pthread_mutex_unlock(&data->stop_mutex);
-		return ;
+		if (delay - slept < chunk)
+			usleep((delay - slept) * 1000);
+		else
+			usleep(chunk * 1000);
+		slept += chunk;
 	}
-	pthread_mutex_unlock(&data->stop_mutex);
-	usleep(delay * 1000);
 }
 
 int	check_cooldowns(t_thread *thread)

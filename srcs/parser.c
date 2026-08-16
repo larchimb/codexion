@@ -58,34 +58,6 @@ static int	check_int(const char *str)
 	return (nbr);
 }
 
-static long	long	check_long(const char *str)
-{
-	int			i;
-	long long	nbr;
-
-	i = 0;
-	if (str[i] == '+')
-		i++;
-	if (!str[i])
-		return (-1);
-	while (str[i])
-	{
-		if (str[i] < '0' || str[i] > '9')
-		{
-			printf("[ERROR]: %s isn't a positive integer", str);
-			return (-1);
-		}
-		i++;
-	}
-	nbr = ft_atoi(str);
-	if (nbr > LLONG_MAX || nbr == -1)
-	{
-		fprintf(stderr, "[ERROR]: %s is superior to LLONG_MAX", str);
-		return (-1);
-	}
-	return (nbr);
-}
-
 int	parser(int ac, char **av, t_args *args)
 {
 	if (ac != 9)
@@ -94,12 +66,12 @@ int	parser(int ac, char **av, t_args *args)
 		return (-1);
 	}
 	args->nb_coders = check_int(av[1]);
-	args->time_to_burnout = check_long(av[2]);
-	args->time_to_compile = check_long(av[3]);
-	args->time_to_debug = check_long(av[4]);
-	args->time_to_refractor = check_long(av[5]);
+	args->time_to_burnout = check_int(av[2]);
+	args->time_to_compile = check_int(av[3]);
+	args->time_to_debug = check_int(av[4]);
+	args->time_to_refractor = check_int(av[5]);
 	args->compiles_required = check_int(av[6]);
-	args->dongle_cooldown = check_long(av[7]);
+	args->dongle_cooldown = check_int(av[7]);
 	args->scheduler = check_scheduler(av[8]);
 	return (check_values(args));
 }

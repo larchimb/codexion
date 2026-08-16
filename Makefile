@@ -8,7 +8,8 @@ RM = rm -f
 
 VPATH = $(INCLUDE) $(SRC)
 SRCS =	$(SRC)codexion.c $(SRC)initializing.c $(SRC)monitoring.c $(SRC)parser.c \
-		$(SRC)parser_utils.c $(SRC)routine.c $(SRC)routine_utils.c $(SRC)time_utils.c
+		$(SRC)parser_utils.c $(SRC)routine.c $(SRC)routine_utils.c $(SRC)time_utils.c \
+		$(SRC)scheduler.c
 
 OBJS = $(addprefix $(OBJDIR)/,$(notdir $(SRCS:.c=.o)))
 DEPS = $(addprefix $(OBJDIR)/,$(notdir $(SRCS:.c=.d)))

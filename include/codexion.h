@@ -23,14 +23,14 @@
 
 typedef struct s_args
 {
-	int			nb_coders;
-	long long	time_to_burnout;
-	long long	time_to_compile;
-	long long	time_to_debug;
-	long long	time_to_refractor;
-	int			compiles_required;
-	long long	dongle_cooldown;
-	int			scheduler; //0 = FIFO, 1 = EDF
+	int	nb_coders;
+	int	time_to_burnout;
+	int	time_to_compile;
+	int	time_to_debug;
+	int	time_to_refractor;
+	int	compiles_required;
+	int	dongle_cooldown;
+	int	scheduler; //0 = FIFO, 1 = EDF
 }	t_args;
 
 typedef struct s_dongle

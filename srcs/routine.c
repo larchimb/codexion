@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/10 17:52:11 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/15 14:50:29 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/16 15:45:07 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ static void	to_compile(t_thread *thread)
 	coder = &thread->data->coders[thread->i];
 	data = thread->data;
 	pthread_mutex_lock(&data->d_mutex);
-	while (coder->left->state == 0 || coder->right->state == 0
-		|| check_cooldowns(thread) == 0)
+	while (data->stop == 0 && (coder->left->state == 0
+			|| coder->right->state == 0 || check_cooldowns(thread) == 0))
 	{
 		add_time_ms(&data->ts, data->args->time_to_compile);
 		pthread_cond_timedwait(&data->cond, &data->d_mutex, &data->ts);
