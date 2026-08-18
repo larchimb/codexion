@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/10 07:56:48 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/15 14:35:20 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/18 17:35:34 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ static t_dongle	*create_dongles(t_args *args)
 		fprintf(stderr, "[ERROR]: Memory allocation for dongles failed\n");
 		return (NULL);
 	}
+	memset(dongles, 0, sizeof(t_dongle) * args->nb_coders);
 	i = 0;
 	while (i < args->nb_coders)
 	{

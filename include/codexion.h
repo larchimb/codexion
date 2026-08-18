@@ -33,30 +33,44 @@ typedef struct s_args
 	int	scheduler; //0 = FIFO, 1 = EDF
 }	t_args;
 
+typedef struct s_request
+{
+	int			coder_id;
+	long long	ticket;
+	long long	deadline;
+}	t_request;
+
+typedef struct s_heap
+{
+	t_request	heap[2];
+	int			size;
+}	t_heap;
+
 typedef struct s_dongle
 {
-	int				state; //1 available, 0 locked
-	long long		last_release;
+	int			state; //1 available, 0 locked
+	long long	last_release;
+	t_heap		queue;
 }	t_dongle;
 
 typedef struct s_coder
 {
-	pthread_t			coder;
-	pthread_mutex_t		c_mutex; //For locking burnout statement
-	int					id;
-	int					compiles_done;
-	int					burnout;
-	int					is_finished;
-	long long			last_start;
-	t_dongle			*left;
-	t_dongle			*right;
+	pthread_t		coder;
+	pthread_mutex_t	c_mutex; //For locking burnout statement
+	int				id;
+	int				compiles_done;
+	int				burnout;
+	int				is_finished;
+	long long		last_start;
+	t_dongle		*left;
+	t_dongle		*right;
 }	t_coder;
 
 typedef struct s_data
 {
 	pthread_mutex_t	stop_mutex;
 	pthread_mutex_t	d_mutex;
-	pthread_cond_t  cond;
+	pthread_cond_t	cond;
 	pthread_t		monitor;
 	t_args			*args;
 	t_dongle		*dongles;
@@ -78,13 +92,14 @@ int			check_values(t_args *args);
 int			parser(int ac, char **av, t_args *args);
 int			initialize_data_struc(t_data *data);
 int			initialize_datas(int ac, char **av, t_data *data);
-int			check_cooldowns(t_thread *thread);
+int			check_cooldowns(t_thread *datas_index);
 int			create_thread(t_data *data, int index);
 long long	get_time_ms(void);
 long long	get_exec_time(t_data *data);
 void		print_message(t_data *data, char *sentence, int id);
-void 		*time_checker(void *args);
+void		*time_checker(void *args);
 void		delay_to_sleep(t_data *data, long long delay);
-void 		add_time_ms(struct timespec *ts, long long time_to_add);
+void		add_time_ms(struct timespec *ts, long long time_to_add);
 void		change_states(t_data *data, t_coder *coder);
+
 #endif
