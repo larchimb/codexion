@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/12 16:27:14 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/16 15:45:16 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/19 13:39:20 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,32 @@ int	check_cooldowns(t_thread *thread)
 		return (1);
 	return (0);
 }
+int	check_states(t_coder *coder)
+{
+	if (&coder->left->state == &coder->right->state)
+		return (0);
+	if (coder->left->state == 0 || coder->right->state == 0)
+		return (0);
+	return (1);
+}
 
 void	change_states(t_data *data, t_coder *coder)
 {
-	pthread_mutex_lock(&data->d_mutex);
-	coder->left->state = 1;
-	coder->right->state = 1;
-	coder->left->last_release = get_time_ms();
-	coder->right->last_release = get_time_ms();
-	pthread_mutex_unlock(&data->d_mutex);
+	if (coder->left->state == 1)
+	{
+		coder->left->state = 0;
+		coder->right->state = 0;
+		heap_pop(&coder->left->queue);
+		heap_pop(&coder->right->queue);
+		print_message(data, "has taken a dongle", coder->id);
+		print_message(data, "has taken a dongle", coder->id);
+		print_message(data, "is compiling", coder->id);
+	}
+	else
+	{
+		coder->left->state = 1;
+		coder->right->state = 1;
+		coder->left->last_release = get_time_ms();
+		coder->right->last_release = get_time_ms();
+	}
 }

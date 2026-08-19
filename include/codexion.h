@@ -42,7 +42,7 @@ typedef struct s_request
 
 typedef struct s_heap
 {
-	t_request	heap[2];
+	t_request	requests[2];
 	int			size;
 }	t_heap;
 
@@ -61,6 +61,7 @@ typedef struct s_coder
 	int				compiles_done;
 	int				burnout;
 	int				is_finished;
+	int				has_request;
 	long long		last_start;
 	t_dongle		*left;
 	t_dongle		*right;
@@ -79,6 +80,7 @@ typedef struct s_data
 	long long		starting_time;
 	struct timespec	ts;
 	int				thread_created;
+	int				next_ticket;
 }	t_data;
 
 typedef struct s_thread
@@ -94,6 +96,8 @@ int			initialize_data_struc(t_data *data);
 int			initialize_datas(int ac, char **av, t_data *data);
 int			check_cooldowns(t_thread *datas_index);
 int			create_thread(t_data *data, int index);
+int			check_priority(t_coder *coder);
+int			check_states(t_coder *coder);
 long long	get_time_ms(void);
 long long	get_exec_time(t_data *data);
 void		print_message(t_data *data, char *sentence, int id);
@@ -101,5 +105,8 @@ void		*time_checker(void *args);
 void		delay_to_sleep(t_data *data, long long delay);
 void		add_time_ms(struct timespec *ts, long long time_to_add);
 void		change_states(t_data *data, t_coder *coder);
+void		heap_push(t_heap *heap, t_request req, int scheduler);
+void		heap_pop(t_heap *heap);
+void		push_request(t_data *data, t_coder *coder);
 
 #endif

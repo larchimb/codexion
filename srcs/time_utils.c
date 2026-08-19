@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/12 09:22:10 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/15 11:15:35 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/19 11:30:52 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ long long	get_exec_time(t_data *data)
 void	add_time_ms(struct timespec *ts, long long time_to_add)
 {
 	clock_gettime(CLOCK_REALTIME, ts);
-	ts->tv_nsec += time_to_add;
+	ts->tv_nsec += time_to_add * 1000000L;
 	if (ts->tv_nsec >= 1000000000L)
 	{
 		ts->tv_sec += 1;
