@@ -6,11 +6,31 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/10 07:56:48 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/19 13:15:21 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/19 18:05:16 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
+
+static void	seed_requests(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->args->nb_coders)
+	{
+		if (data->coders[i].id % 2 == 1)
+			push_request(data, &data->coders[i]);
+		i++;
+	}
+	i = 0;
+	while (i < data->args->nb_coders)
+	{
+		if (data->coders[i].id % 2 == 0)
+			push_request(data, &data->coders[i]);
+		i++;
+	}
+}
 
 int	initialize_data_struc(t_data *data)
 {
@@ -94,5 +114,6 @@ int	initialize_datas(int ac, char **av, t_data *data)
 	data->coders = create_coders(data, data->args, data->dongles);
 	if (!data->coders)
 		return (-1);
+	seed_requests(data);
 	return (0);
 }

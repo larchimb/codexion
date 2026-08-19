@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/18 18:02:47 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/19 12:47:04 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/19 18:15:04 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,7 @@ void	heap_push(t_heap *heap, t_request req, int scheduler)
 			heap->requests[0] = req;
 		}
 		else
-		{
-			if (req.coder_id % 2 == 1)
-				heap->requests[1] = req;
-			else
-			{
-			heap->requests[1] = heap->requests[0];
-			heap->requests[0] = req;
-			}
-		}
+			check_and_move(heap, &heap->requests[0], req);
 	}
 	else
 		heap->requests[0] = req;

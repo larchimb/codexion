@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/12 16:27:14 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/19 13:39:20 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/19 16:05:52 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,17 +48,17 @@ void	delay_to_sleep(t_data *data, long long delay)
 	}
 }
 
-int	check_cooldowns(t_thread *thread)
+int	check_cooldowns(t_data *data, int i)
 {
 	t_coder	*coder;
 	long	left_release;
 	long	right_release;
 	long	cooldown;
 
-	coder = &thread->data->coders[thread->i];
+	coder = &data->coders[i];
 	left_release = coder->left->last_release;
 	right_release = coder->right->last_release;
-	cooldown = thread->data->args->dongle_cooldown;
+	cooldown = data->args->dongle_cooldown;
 	if (get_time_ms() - left_release > cooldown
 		&& get_time_ms() - right_release > cooldown)
 		return (1);

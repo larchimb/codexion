@@ -80,7 +80,7 @@ typedef struct s_data
 	long long		starting_time;
 	struct timespec	ts;
 	int				thread_created;
-	int				next_ticket;
+	long long		next_ticket;
 }	t_data;
 
 typedef struct s_thread
@@ -94,10 +94,12 @@ int			check_values(t_args *args);
 int			parser(int ac, char **av, t_args *args);
 int			initialize_data_struc(t_data *data);
 int			initialize_datas(int ac, char **av, t_data *data);
-int			check_cooldowns(t_thread *datas_index);
+int			check_cooldowns(t_data *data, int i);
 int			create_thread(t_data *data, int index);
 int			check_priority(t_coder *coder);
 int			check_states(t_coder *coder);
+int			read_stop(t_data *data);
+int			read_coder(t_coder *coder);
 long long	get_time_ms(void);
 long long	get_exec_time(t_data *data);
 void		print_message(t_data *data, char *sentence, int id);

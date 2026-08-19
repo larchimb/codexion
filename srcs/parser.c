@@ -44,7 +44,7 @@ static int	check_int(const char *str)
 	{
 		if (str[i] < '0' || str[i] > '9')
 		{
-			printf("[ERROR]: %s isn't a positive integer", str);
+			fprintf(stderr, "[ERROR]: %s isn't a positive integer\n", str);
 			return (-1);
 		}
 		i++;
@@ -52,7 +52,7 @@ static int	check_int(const char *str)
 	nbr = ft_atoi(str);
 	if (nbr > INT_MAX || nbr == -1)
 	{
-		fprintf(stderr, "[ERROR]: %s is superior to INT_MAX", str);
+		fprintf(stderr, "[ERROR]: %s is superior to INT_MAX\n", str);
 		return (-1);
 	}
 	return (nbr);
@@ -62,7 +62,7 @@ int	parser(int ac, char **av, t_args *args)
 {
 	if (ac != 9)
 	{
-		printf("[ERROR]: There is %d arguments, need 9.", ac);
+		fprintf(stderr, "[ERROR]: There is %d arguments, need 9.\n", ac);
 		return (-1);
 	}
 	args->nb_coders = check_int(av[1]);

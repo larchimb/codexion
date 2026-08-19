@@ -56,6 +56,7 @@ static int	threads_joined(t_data *data)
 		pthread_join(data->coders[i].coder, NULL);
 		if (data->coders[i++].is_finished == 1)
 			result += 1;
+
 	}
 	pthread_mutex_lock(&data->stop_mutex);
 	data->stop = 1;
