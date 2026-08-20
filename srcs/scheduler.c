@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/18 18:02:47 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/20 10:07:48 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/20 16:15:28 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,17 @@ void	push_request(t_data *data, t_coder *coder)
 	int			scheduler;
 
 	scheduler = data->args->scheduler;
+	pthread_mutex_lock(&data->ticket_mutex);
 	req.ticket = data->next_ticket++;
+	pthread_mutex_unlock(&data->ticket_mutex);
+	pthread_mutex_lock(&coder->c_mutex);
 	req.deadline = coder->last_start + data->args->time_to_burnout;
+	pthread_mutex_unlock(&coder->c_mutex);
 	req.coder_id = coder->id;
+	lock_d_mutexes(coder);
 	heap_push(&coder->left->queue, req, scheduler);
 	heap_push(&coder->right->queue, req, scheduler);
+	unlock_d_mutexes(coder);
 }
 
 int	check_priority(t_coder *coder)

@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/10 07:56:48 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/20 10:01:19 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/20 16:06:08 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ int	initialize_data_struc(t_data *data)
 	data->args = NULL;
 	data->coders = NULL;
 	data->dongles = NULL;
-	pthread_mutex_init(&data->stop_mutex, NULL);
-	pthread_mutex_init(&data->d_mutex, NULL);
-	if (pthread_cond_init(&data->cond, NULL) != 0)
+	if (pthread_mutex_init(&data->stop_mutex, NULL) != 0)
+		return (-1);
+	if (pthread_mutex_init(&data->ticket_mutex, NULL) != 0)
 		return (-1);
 	data->stop = 0;
 	data->starting_time = get_time_ms();
@@ -45,6 +45,7 @@ static t_dongle	*create_dongles(t_args *args)
 	{
 		dongles[i].state = 1;
 		dongles[i].last_release = (get_time_ms() - (args->dongle_cooldown + 1));
+		pthread_mutex_init(&dongles[i].d_mutex, NULL);
 		i++;
 	}
 	return (dongles);

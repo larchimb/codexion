@@ -48,9 +48,11 @@ typedef struct s_heap
 
 typedef struct s_dongle
 {
-	int			state; //1 available, 0 locked
-	long long	last_release;
-	t_heap		queue;
+	int				state; //1 available, 0 locked
+	long long		last_release;
+	pthread_mutex_t	d_mutex;
+	pthread_cond_t	cond;
+	t_heap			queue;
 }	t_dongle;
 
 typedef struct s_coder
@@ -70,15 +72,13 @@ typedef struct s_coder
 typedef struct s_data
 {
 	pthread_mutex_t	stop_mutex;
-	pthread_mutex_t	d_mutex;
-	pthread_cond_t	cond;
+	pthread_mutex_t	ticket_mutex;
 	pthread_t		monitor;
 	t_args			*args;
 	t_dongle		*dongles;
 	t_coder			*coders;
 	int				stop;
 	long long		starting_time;
-	struct timespec	ts;
 	int				thread_created;
 	long long		next_ticket;
 }	t_data;
@@ -105,10 +105,11 @@ long long	get_exec_time(t_data *data);
 void		print_message(t_data *data, char *sentence, int id);
 void		*time_checker(void *args);
 void		delay_to_sleep(t_data *data, long long delay);
-void		add_time_ms(struct timespec *ts, long long time_to_add);
-void		change_states(t_data *data, t_coder *coder);
+void		change_states(t_coder *coder);
 void		heap_push(t_heap *heap, t_request req, int scheduler);
 void		heap_pop(t_heap *heap);
 void		push_request(t_data *data, t_coder *coder);
+void		lock_d_mutexes(t_coder *coder);
+void		unlock_d_mutexes(t_coder *coder);
 
 #endif

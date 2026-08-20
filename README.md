@@ -100,15 +100,6 @@ Mutexes protect shared resources such as dongle states and logging.
 
 For example, a coder must lock the appropriate dongle mutex before acquiring a dongle, preventing two coders from taking the same dongle simultaneously.
 
-### `pthread_cond_t`
-
-Condition variables can be used to put waiting coders to sleep and wake them when resources become available.
-
-They also allow the scheduler to coordinate access to dongles without unnecessary busy waiting.
-
-### `pthread_cond_timedwait`
-
-Make the thread waiting on the condition define previously or according to a time.
 
 ### Monitor synchronization
 

@@ -1,18 +1,18 @@
 NAME = codexion
 CC = cc
-CFLAGS = -g3 -Wall -Wextra -Werror -MMD -MP -I./include
+INCLUDE = include/
+CFLAGS = -Wall -Wextra -Werror -pthread -MMD -MP -I$(INCLUDE)
 OBJDIR = .objects
 SRC = srcs/
-INCLUDE = include/
-RM = rm -f
+RM = rm -rf
 
-VPATH = $(INCLUDE) $(SRC)
-SRCS =	$(SRC)codexion.c $(SRC)initializing.c $(SRC)monitoring.c $(SRC)parser.c \
-		$(SRC)parser_utils.c $(SRC)routine.c $(SRC)routine_utils.c $(SRC)routine_utils2.c \
-		$(SRC)time_utils.c $(SRC)scheduler.c
+VPATH = $(SRC)
+SRCS =	codexion.c initializing.c monitoring.c parser.c \
+		parser_utils.c routine.c routine_utils.c routine_utils2.c \
+		time_utils.c scheduler.c
 
-OBJS = $(addprefix $(OBJDIR)/,$(notdir $(SRCS:.c=.o)))
-DEPS = $(addprefix $(OBJDIR)/,$(notdir $(SRCS:.c=.d)))
+OBJS = $(addprefix $(OBJDIR)/,$(SRCS:.c=.o))
+DEPS = $(addprefix $(OBJDIR)/,$(SRCS:.c=.d))
 
 all: $(NAME)
 
@@ -22,17 +22,17 @@ $(NAME): $(OBJS)
 $(OBJDIR)/%.o:%.c | $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(OBJDIR) :
+$(OBJDIR):
 	mkdir -p $(OBJDIR)
 
 clean:
-	rm -rf $(OBJDIR)
+	$(RM) $(OBJDIR)
 
 fclean: clean
 	$(RM) $(NAME)
 
 re: fclean all
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re
 
 -include $(DEPS)

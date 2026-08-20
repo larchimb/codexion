@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/10 17:52:11 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/20 09:54:28 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/20 15:56:58 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,30 @@
 
 static void	to_compile(t_data *data, t_coder *coder, int i)
 {
-	pthread_mutex_lock(&data->d_mutex);
 	if (coder->has_request == 1)
 		coder->has_request = 0;
 	else
 		push_request(data, coder);
-	while (read_stop(data) == 0 && (check_priority(coder) == 0
-			|| check_states(coder) == 0 || check_cooldowns(data, i) == 0))
+	lock_d_mutexes(coder);
+	while (read_stop(data) == 0 && (check_states(coder) == 0
+			|| check_priority(coder) == 0 || check_cooldowns(data, i) == 0))
 	{
-		add_time_ms(&data->ts, 1);
-		pthread_cond_timedwait(&data->cond, &data->d_mutex, &data->ts);
+		unlock_d_mutexes(coder);
+		usleep(1000);
+		lock_d_mutexes(coder);
 	}
 	pthread_mutex_lock(&coder->c_mutex);
 	coder->last_start = get_time_ms();
 	pthread_mutex_unlock(&coder->c_mutex);
-	change_states(data, coder);
-	pthread_mutex_unlock(&data->d_mutex);
+	change_states(coder);
+	unlock_d_mutexes(coder);
+	print_message(data, "has taken a dongle", coder->id);
+	print_message(data, "has taken a dongle", coder->id);
+	print_message(data, "is compiling", coder->id);
 	delay_to_sleep(data, data->args->time_to_compile);
-	pthread_mutex_lock(&data->d_mutex);
-	change_states(data, coder);
-	pthread_cond_broadcast(&data->cond);
-	pthread_mutex_unlock(&data->d_mutex);
+	lock_d_mutexes(coder);
+	change_states(coder);
+	unlock_d_mutexes(coder);
 }
 
 static void	to_debug(t_thread *datas_index)

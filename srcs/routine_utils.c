@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/12 16:27:14 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/20 09:54:12 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/20 16:21:47 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,25 +26,14 @@ void	print_message(t_data *data, char *sentence, int id)
 
 void	delay_to_sleep(t_data *data, long long delay)
 {
-	long long	slept;
-	long long	chunk;
+	long long	target;
 
-	slept = 0;
-	chunk = 100;
-	while (slept < delay)
+	target = get_time_ms() + delay;
+	while (get_time_ms() < target)
 	{
-		pthread_mutex_lock(&data->stop_mutex);
-		if (data->stop == 1)
-		{
-			pthread_mutex_unlock(&data->stop_mutex);
+		if (read_stop(data) == 1)
 			return ;
-		}
-		pthread_mutex_unlock(&data->stop_mutex);
-		if (delay - slept < chunk)
-			usleep((delay - slept) * 1000);
-		else
-			usleep(chunk * 1000);
-		slept += chunk;
+		usleep(1000);
 	}
 }
 
@@ -67,14 +56,14 @@ int	check_cooldowns(t_data *data, int i)
 
 int	check_states(t_coder *coder)
 {
-	if (&coder->left->state == &coder->right->state)
+	if (coder->left == coder->right)
 		return (0);
 	if (coder->left->state == 0 || coder->right->state == 0)
 		return (0);
 	return (1);
 }
 
-void	change_states(t_data *data, t_coder *coder)
+void	change_states(t_coder *coder)
 {
 	if (coder->left->state == 1)
 	{
@@ -82,9 +71,6 @@ void	change_states(t_data *data, t_coder *coder)
 		coder->right->state = 0;
 		heap_pop(&coder->left->queue);
 		heap_pop(&coder->right->queue);
-		print_message(data, "has taken a dongle", coder->id);
-		print_message(data, "has taken a dongle", coder->id);
-		print_message(data, "is compiling", coder->id);
 	}
 	else
 	{

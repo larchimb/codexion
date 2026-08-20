@@ -25,12 +25,15 @@ static void	free_all(t_data *data)
 	}
 	i = 0;
 	if (data->dongles)
+	{
+		while (i < data->args->nb_coders)
+			pthread_mutex_destroy(&data->dongles[i++].d_mutex);
 		free(data->dongles);
+	}
 	if (data->args)
 		free(data->args);
 	pthread_mutex_destroy(&data->stop_mutex);
-	pthread_mutex_destroy(&data->d_mutex);
-	pthread_cond_destroy(&data->cond);
+	pthread_mutex_destroy(&data->ticket_mutex);
 	free(data);
 }
 
@@ -72,8 +75,11 @@ int	main(int ac, char **av)
 	data = malloc(sizeof(t_data));
 	if (!data)
 		return (1);
-	if (check_free(data, initialize_data_struc(data)) == -1)
+	if (initialize_data_struc(data) == -1)
+	{
+		free(data);
 		return (1);
+	}
 	if (check_free(data, initialize_datas(ac, av, data)) == -1)
 		return (1);
 	if (check_free(data,

@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/10 10:36:54 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/20 10:00:43 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/20 15:19:00 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ static int	burnout_signal(t_data *data, int i)
 	{
 		coder->burnout = 1;
 		pthread_mutex_unlock(&coder->c_mutex);
-		printf("%lld %d burned out\n", get_exec_time(data), coder->id);
 		pthread_mutex_lock(&data->stop_mutex);
 		data->stop = 1;
+		printf("%lld %d burned out\n", get_exec_time(data), coder->id);
 		pthread_mutex_unlock(&data->stop_mutex);
 		return (-1);
 	}
@@ -51,7 +51,7 @@ void	*time_checker(void *args)
 				break ;
 			i++;
 		}
-		usleep(1000);
+		usleep(2000);
 	}
 	return (NULL);
 }
