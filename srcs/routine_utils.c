@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/12 16:27:14 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/19 16:05:52 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/20 09:54:12 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ int	check_cooldowns(t_data *data, int i)
 		return (1);
 	return (0);
 }
+
 int	check_states(t_coder *coder)
 {
 	if (&coder->left->state == &coder->right->state)

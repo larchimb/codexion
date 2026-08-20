@@ -6,31 +6,11 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/10 07:56:48 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/19 18:05:16 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/20 10:01:19 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
-
-static void	seed_requests(t_data *data)
-{
-	int	i;
-
-	i = 0;
-	while (i < data->args->nb_coders)
-	{
-		if (data->coders[i].id % 2 == 1)
-			push_request(data, &data->coders[i]);
-		i++;
-	}
-	i = 0;
-	while (i < data->args->nb_coders)
-	{
-		if (data->coders[i].id % 2 == 0)
-			push_request(data, &data->coders[i]);
-		i++;
-	}
-}
 
 int	initialize_data_struc(t_data *data)
 {
@@ -64,7 +44,7 @@ static t_dongle	*create_dongles(t_args *args)
 	while (i < args->nb_coders)
 	{
 		dongles[i].state = 1;
-		dongles[i].last_release = get_time_ms() - (args->dongle_cooldown + 1);
+		dongles[i].last_release = (get_time_ms() - (args->dongle_cooldown + 1));
 		i++;
 	}
 	return (dongles);
@@ -96,6 +76,26 @@ static t_coder	*create_coders(t_data *data, t_args *args, t_dongle *dongles)
 		i++;
 	}
 	return (coders);
+}
+
+static void	seed_requests(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->args->nb_coders)
+	{
+		if (data->coders[i].id % 2 == 1)
+			push_request(data, &data->coders[i]);
+		i++;
+	}
+	i = 0;
+	while (i < data->args->nb_coders)
+	{
+		if (data->coders[i].id % 2 == 0)
+			push_request(data, &data->coders[i]);
+		i++;
+	}
 }
 
 int	initialize_datas(int ac, char **av, t_data *data)

@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/18 18:02:47 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/19 18:15:04 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/20 10:07:48 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 static void	check_and_move(t_heap *heap, t_request *first, t_request req)
 {
 	if (first->ticket < req.ticket)
-			heap->requests[1] = req;
-		else
-		{
-			heap->requests[1] = *first;
-			*first = req;
-		}
+		heap->requests[1] = req;
+	else
+	{
+		heap->requests[1] = *first;
+		*first = req;
+	}
 }
 
 void	heap_push(t_heap *heap, t_request req, int scheduler)
@@ -53,7 +53,7 @@ void	heap_pop(t_heap *heap)
 
 void	push_request(t_data *data, t_coder *coder)
 {
-	t_request 	req;
+	t_request	req;
 	int			scheduler;
 
 	scheduler = data->args->scheduler;

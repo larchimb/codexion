@@ -6,7 +6,7 @@
 /*   By: larchimb <larchimb@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/10 17:52:11 by larchimb          #+#    #+#             */
-/*   Updated: 2026/08/19 18:05:03 by larchimb         ###   ########.fr       */
+/*   Updated: 2026/08/20 09:54:28 by larchimb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static void	to_compile(t_data *data, t_coder *coder, int i)
 	if (coder->has_request == 1)
 		coder->has_request = 0;
 	else
-	push_request(data, coder);
+		push_request(data, coder);
 	while (read_stop(data) == 0 && (check_priority(coder) == 0
 			|| check_states(coder) == 0 || check_cooldowns(data, i) == 0))
 	{
